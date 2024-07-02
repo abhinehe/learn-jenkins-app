@@ -91,11 +91,10 @@ pipeline {
         }
 
         stage('Approve'){
-            steps{
-                input message: 'Do you wish to Diploy ', ok: 'Yes I am Sure'
+            steps{ 
                 timeout(time: 15, unit: 'HOURS') {
-                'Approve within the 15 Minutes'
-}
+                    input message: 'Do you wish to Diploy ', ok: 'Yes I am Sure'
+                }
             }
         }
 
