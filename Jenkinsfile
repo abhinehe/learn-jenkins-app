@@ -39,7 +39,7 @@ pipeline {
                 AWS_S3_BUCKET = 'learn-jenkins-8793955673' 
             }
             steps{
-                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'dppXqgybLDUJfxW1H+mvQBRRFDwQBy36WPTl6EPv', usernameVariable: 'dppXqgybLDUJfxW1H+mvQBRRFDwQBy36WPTl6EPv')]) {
+                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh'''
                     aws --version
                     aws s3 sync build s3://$AWS_S3_BUCKET
