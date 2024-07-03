@@ -15,9 +15,11 @@ pipeline {
                 }
             }
             steps{
-                sh'''
-                aws --version
-                '''
+                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'dppXqgybLDUJfxW1H+mvQBRRFDwQBy36WPTl6EPv', usernameVariable: 'dppXqgybLDUJfxW1H+mvQBRRFDwQBy36WPTl6EPv')]) {
+                    sh'''
+                    aws --version
+                    '''
+                } 
             }
         } 
         stage('Build') {
