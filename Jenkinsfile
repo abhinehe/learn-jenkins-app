@@ -7,21 +7,7 @@ pipeline {
     }
 
     stages {   
-        stage('AWS'){
-            agent{
-                docker{
-                    image 'amazon/aws-cli'
-                    args "'--entrypoint=''"                           
-                }
-            }
-            steps{
-                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'dppXqgybLDUJfxW1H+mvQBRRFDwQBy36WPTl6EPv', usernameVariable: 'dppXqgybLDUJfxW1H+mvQBRRFDwQBy36WPTl6EPv')]) {
-                    sh'''
-                    aws --version
-                    '''
-                } 
-            }
-        } 
+        
         stage('Build') {
             agent{
                 docker{
@@ -40,6 +26,27 @@ pipeline {
                 '''
             }
         }
+        stage('AWS'){
+            agent{
+                docker{
+                    image 'amazon/aws-cli'
+                    reuseNode true
+                    args "'--entrypoint=''"                           
+                }
+            }
+
+            environment{
+                AWS_S3_BUCKET = 'learn-jenkins-8793955673' 
+            }
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'dppXqgybLDUJfxW1H+mvQBRRFDwQBy36WPTl6EPv', usernameVariable: 'dppXqgybLDUJfxW1H+mvQBRRFDwQBy36WPTl6EPv')]) {
+                    sh'''
+                    aws --version
+                    aws s3 sync build s3://$AWS_S3_BUCKET
+                    '''
+                } 
+            }
+        } 
         stage('Test'){
             parallel{
                 stage('Unit tests') {
