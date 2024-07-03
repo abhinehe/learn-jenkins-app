@@ -7,6 +7,20 @@ pipeline {
     }
 
     stages {
+        stage('AWS') {
+            agent{
+                docker{
+                    image 'amazon/aws-cli'
+                    args "--entrypoint=''"
+                }
+            }
+            steps{
+                sh'''
+                    aws --version
+                '''
+            }
+
+
         stage('Build') {
             agent{
                 docker{
@@ -88,14 +102,6 @@ pipeline {
                     node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
                     node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json
                 '''
-            }
-        }
-
-        stage('Approve'){
-            steps{ 
-                timeout(time: 15, unit: 'HOURS') {
-                    input message: 'Do you wish to Diploy ', ok: 'Yes I am Sure'
-                }
             }
         }
 
